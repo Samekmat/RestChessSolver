@@ -43,6 +43,13 @@ class Pawn(Figure):
         pass
 
 
+class Knight(Figure):
+    def list_available_moves(self):
+        super().list_available_moves()
+        super().find_current_index()
+        pass
+
+
 class Bishop(Figure):
     def list_available_moves(self):
         super().list_available_moves()
