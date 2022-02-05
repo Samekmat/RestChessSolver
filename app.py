@@ -56,5 +56,11 @@ class Bishop(Figure):
         super().find_current_index()
         pass
 
+class Rook(Figure):
+    def list_available_moves(self):
+        super().list_available_moves()
+        super().find_current_index()
+        pass
+
 if __name__ == "__main__":
     app.run(debug=True)
