@@ -26,6 +26,11 @@ class Figure(ABC):
             ['A8', 'B8', 'C8', 'D8', 'E8', 'F8', 'G8', 'H8'],
         ]
 
+    def find_current_index(self):
+        for sub_list in self.all_moves:
+            if self.currentField in sub_list:
+                self.current_index = (self.all_moves.index(sub_list), sub_list.index(self.currentField))
+                return self.current_index
 
     def validate_move(self, dest_field):
         return 'valid' if dest_field in self.availableMoves else 'invalid'
