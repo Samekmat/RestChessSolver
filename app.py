@@ -40,9 +40,9 @@ class Pawn(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        self.availableMoves = ''
+        self.availableMoves = []
         i = self.current_index
-        self.availableMoves += self.all_moves[i[0] + 1][i[1]]
+        self.availableMoves.append(self.all_moves[i[0] + 1][i[1]])
 
         return self.availableMoves
 
