@@ -27,5 +27,9 @@ class Figure(ABC):
         ]
 
 
+    def validate_move(self, dest_field):
+        return 'valid' if dest_field in self.availableMoves else 'invalid'
+
+
 if __name__ == "__main__":
     app.run(debug=True)
