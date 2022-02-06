@@ -99,7 +99,19 @@ class Queen(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        pass
+        i = self.current_index
+        self.availableMoves = []
+
+        for pos in range(8):
+            if pos != i[0]:
+                self.availableMoves.append(self.all_moves[pos][i[1]])
+            if pos != i[1]:
+                self.availableMoves.append(self.all_moves[i[0]][pos])
+            for y in range(8):
+                if abs(pos - i[0]) == abs(y - i[1]) > 0:
+                    self.availableMoves.append(self.all_moves[pos][y])
+
+        return sorted(self.availableMoves)
 
 
 class King(Figure):
