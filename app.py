@@ -58,7 +58,16 @@ class Bishop(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        pass
+        i = self.current_index
+        self.availableMoves = []
+
+        for lin, l in enumerate(self.all_moves):
+            # lin = index of a nested list in all_moves list
+            for index, value in enumerate(l):
+                if abs(lin - i[0]) == abs(index - i[1]) > 0:
+                    self.availableMoves.append(self.all_moves[lin][index])
+
+        return sorted(self.availableMoves)
 
 
 class Rook(Figure):
