@@ -15,7 +15,7 @@ class Figure(ABC):
         
     @abstractmethod
     def list_available_moves(self):
-        self.all_moves = [
+        self.allMoves = [
             ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1'],
             ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2'],
             ['A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3'],
@@ -27,10 +27,10 @@ class Figure(ABC):
         ]
 
     def find_current_index(self):
-        for sub_list in self.all_moves:
+        for sub_list in self.allMoves:
             if self.currentField in sub_list:
-                self.current_index = (self.all_moves.index(sub_list), sub_list.index(self.currentField))
-                return self.current_index
+                self.currentIndex = (self.allMoves.index(sub_list), sub_list.index(self.currentField))
+                return self.currentIndex
 
     def validate_move(self, dest_field):
         return 'valid' if dest_field in self.availableMoves else 'invalid'
@@ -41,8 +41,8 @@ class Pawn(Figure):
         super().list_available_moves()
         super().find_current_index()
         self.availableMoves = []
-        i = self.current_index
-        self.availableMoves.append(self.all_moves[i[0] + 1][i[1]])
+        i = self.currentIndex
+        self.availableMoves.append(self.allMoves[i[0] + 1][i[1]])
 
         return self.availableMoves
 
@@ -51,14 +51,13 @@ class Knight(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        i = self.current_index
+        i = self.currentIndex
         self.availableMoves = []
 
-        for lin, l in enumerate(self.all_moves):
-            # lin = index of a nested list in all_moves list
-            for index, value in enumerate(l):
-                if abs((i[0] - lin) * (i[1] - index)) == 2:
-                    self.availableMoves.append(self.all_moves[lin][index])
+        for x in range(8):
+            for y in range(8):
+                if abs((i[0] - x) * (i[1] - y)) == 2:
+                    self.availableMoves.append(self.allMoves[x][y])
         
         return sorted(self.availableMoves)
 
@@ -67,14 +66,13 @@ class Bishop(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        i = self.current_index
+        i = self.currentIndex
         self.availableMoves = []
 
-        for lin, l in enumerate(self.all_moves):
-            # lin = index of a nested list in all_moves list
-            for index, value in enumerate(l):
-                if abs(lin - i[0]) == abs(index - i[1]) > 0:
-                    self.availableMoves.append(self.all_moves[lin][index])
+        for x in range(8):
+            for y in range(8):
+                if abs(x - i[0]) == abs(y - i[1]) > 0:
+                    self.availableMoves.append(self.allMoves[x][y])
 
         return sorted(self.availableMoves)
 
@@ -84,13 +82,13 @@ class Rook(Figure):
         super().list_available_moves()
         super().find_current_index()
         self.availableMoves = []
-        i = self.current_index
+        i = self.currentIndex
 
-        for pos in range(8):
-            if pos != i[0]:
-                self.availableMoves.append(self.all_moves[pos][i[1]])
-            if pos != i[1]:
-                self.availableMoves.append(self.all_moves[i[0]][pos])
+        for x in range(8):
+            if x != i[0]:
+                self.availableMoves.append(self.allMoves[x][i[1]])
+            if x != i[1]:
+                self.availableMoves.append(self.allMoves[i[0]][x])
 
         return sorted(self.availableMoves)
 
@@ -99,17 +97,17 @@ class Queen(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        i = self.current_index
+        i = self.currentIndex
         self.availableMoves = []
 
-        for pos in range(8):
-            if pos != i[0]:
-                self.availableMoves.append(self.all_moves[pos][i[1]])
-            if pos != i[1]:
-                self.availableMoves.append(self.all_moves[i[0]][pos])
+        for x in range(8):
+            if x != i[0]:
+                self.availableMoves.append(self.allMoves[x][i[1]])
+            if x != i[1]:
+                self.availableMoves.append(self.allMoves[i[0]][x])
             for y in range(8):
-                if abs(pos - i[0]) == abs(y - i[1]) > 0:
-                    self.availableMoves.append(self.all_moves[pos][y])
+                if abs(x - i[0]) == abs(y - i[1]) > 0:
+                    self.availableMoves.append(self.allMoves[x][y])
 
         return sorted(self.availableMoves)
 
@@ -118,13 +116,13 @@ class King(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        i = self.current_index
+        i = self.currentIndex
         self.availableMoves = []
 
         for x in range(8):
             for y in range(8):
                 if(max(abs(x - i[0]), abs(y - i[1])) ==1):
-                    self.availableMoves.append(self.all_moves[x][y])
+                    self.availableMoves.append(self.allMoves[x][y])
         return sorted(self.availableMoves)
 
 
