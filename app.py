@@ -51,7 +51,16 @@ class Knight(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        pass
+        i = self.current_index
+        self.availableMoves = []
+
+        for lin, l in enumerate(self.all_moves):
+            # lin = index of a nested list in all_moves list
+            for index, value in enumerate(l):
+                if abs((i[0] - lin) * (i[1] - index)) == 2:
+                    self.availableMoves.append(self.all_moves[lin][index])
+        
+        return sorted(self.availableMoves)
 
 
 class Bishop(Figure):
