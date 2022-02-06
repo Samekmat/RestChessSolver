@@ -65,7 +65,16 @@ class Rook(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        pass
+        self.availableMoves = []
+        i = self.current_index
+
+        for pos in range(8):
+            if pos != i[0]:
+                self.availableMoves.append(self.all_moves[pos][i[1]])
+            if pos != i[1]:
+                self.availableMoves.append(self.all_moves[i[0]][pos])
+
+        return sorted(self.availableMoves)
 
 
 class Queen(Figure):
