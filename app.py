@@ -106,7 +106,14 @@ class King(Figure):
     def list_available_moves(self):
         super().list_available_moves()
         super().find_current_index()
-        pass
+        i = self.current_index
+        self.availableMoves = []
+
+        for x in range(8):
+            for y in range(8):
+                if(max(abs(x - i[0]), abs(y - i[1])) ==1):
+                    self.availableMoves.append(self.all_moves[x][y])
+        return sorted(self.availableMoves)
 
 
 if __name__ == "__main__":
