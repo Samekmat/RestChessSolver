@@ -18,10 +18,11 @@ BOARD = [
 class Figure(ABC):
     def __init__(self, position):
         self.currentField = position
-        
+        self.availableMoves = []
+
     @abstractmethod
     def list_available_moves(self):
-        self.availableMoves = []
+        pass
 
     def find_current_index(self):
         for sub_list in BOARD:
@@ -128,10 +129,30 @@ def available_figure_moves(chessFigure, currentField):
     flatBoard = [item for sublist in BOARD for item in sublist]
     if currentField not in flatBoard:
         e = 'Field does not exist'
-        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure.lower(), "currentField": currentField})
-    
-    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": e, "figure": chessFigure.lower(), "currentField": currentField})
+        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure, "currentField": currentField})
+
+    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": e, "figure": chessFigure, "currentField": currentField})
  
+
+
+@app.route("/api/v1/<string:chessFigure>/<string:currentField>/<string:destField>", methods=["GET"])
+def is_move_valid(chessFigure, currentField, destField):
+    currentField = currentField[0].upper() + currentField[1:]
+    chessFigure = chessFigure.lower()
+    destField = destField[0].upper() + destField[1:]
+    e = 'null'
+    figures = {
+        'pawn': Pawn(currentField),
+        'knight': Knight(currentField),
+        'bishop': Bishop(currentField),
+        'rook': Rook(currentField),
+        'queen': Queen(currentField),
+        'king': King(currentField),
+    }
+
+    moves = figures[chessFigure].list_available_moves()
+    
+    return jsonify({'move': figures[chessFigure].validate_move(destField), 'figure': chessFigure, "error": e, "currentField": currentField, "destField": destField})
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
