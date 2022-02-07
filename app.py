@@ -4,18 +4,7 @@ from abc import ABC, abstractmethod
 app = Flask(__name__)
 
 
-@app.route("/", methods=["GET"])
-def test():
-    return jsonify({0: "test"})
-
-
-class Figure(ABC):
-    def __init__(self, position):
-        self.currentField = position
-        
-    @abstractmethod
-    def list_available_moves(self):
-        self.allMoves = [
+BOARD = [
             ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1'],
             ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2'],
             ['A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3'],
@@ -26,10 +15,18 @@ class Figure(ABC):
             ['A8', 'B8', 'C8', 'D8', 'E8', 'F8', 'G8', 'H8'],
         ]
 
+class Figure(ABC):
+    def __init__(self, position):
+        self.currentField = position
+        
+    @abstractmethod
+    def list_available_moves(self):
+        pass
+
     def find_current_index(self):
-        for sub_list in self.allMoves:
+        for sub_list in BOARD:
             if self.currentField in sub_list:
-                self.currentIndex = (self.allMoves.index(sub_list), sub_list.index(self.currentField))
+                self.currentIndex = (BOARD.index(sub_list), sub_list.index(self.currentField))
                 return self.currentIndex
 
     def validate_move(self, dest_field):
@@ -42,7 +39,7 @@ class Pawn(Figure):
         super().find_current_index()
         self.availableMoves = []
         i = self.currentIndex
-        self.availableMoves.append(self.allMoves[i[0] + 1][i[1]])
+        self.availableMoves.append(BOARD[i[0] + 1][i[1]])
 
         return self.availableMoves
 
@@ -57,7 +54,7 @@ class Knight(Figure):
         for x in range(8):
             for y in range(8):
                 if abs((i[0] - x) * (i[1] - y)) == 2:
-                    self.availableMoves.append(self.allMoves[x][y])
+                    self.availableMoves.append(BOARD[x][y])
         
         return sorted(self.availableMoves)
 
@@ -72,7 +69,7 @@ class Bishop(Figure):
         for x in range(8):
             for y in range(8):
                 if abs(x - i[0]) == abs(y - i[1]) > 0:
-                    self.availableMoves.append(self.allMoves[x][y])
+                    self.availableMoves.append(BOARD[x][y])
 
         return sorted(self.availableMoves)
 
@@ -86,9 +83,9 @@ class Rook(Figure):
 
         for x in range(8):
             if x != i[0]:
-                self.availableMoves.append(self.allMoves[x][i[1]])
+                self.availableMoves.append(BOARD[x][i[1]])
             if x != i[1]:
-                self.availableMoves.append(self.allMoves[i[0]][x])
+                self.availableMoves.append(BOARD[i[0]][x])
 
         return sorted(self.availableMoves)
 
@@ -102,12 +99,12 @@ class Queen(Figure):
 
         for x in range(8):
             if x != i[0]:
-                self.availableMoves.append(self.allMoves[x][i[1]])
+                self.availableMoves.append(BOARD[x][i[1]])
             if x != i[1]:
-                self.availableMoves.append(self.allMoves[i[0]][x])
+                self.availableMoves.append(BOARD[i[0]][x])
             for y in range(8):
                 if abs(x - i[0]) == abs(y - i[1]) > 0:
-                    self.availableMoves.append(self.allMoves[x][y])
+                    self.availableMoves.append(BOARD[x][y])
 
         return sorted(self.availableMoves)
 
@@ -121,10 +118,10 @@ class King(Figure):
 
         for x in range(8):
             for y in range(8):
-                if(max(abs(x - i[0]), abs(y - i[1])) ==1):
-                    self.availableMoves.append(self.allMoves[x][y])
+                if(max(abs(x - i[0]), abs(y - i[1])) == 1):
+                    self.availableMoves.append(BOARD[x][y])
         return sorted(self.availableMoves)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8000)
