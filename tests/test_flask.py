@@ -11,6 +11,7 @@ def test_available_moves():
     response5 = app.test_client().put("/api/v1/King/D4")
     response6 = app.test_client().delete("/api/v1/Bishop/D6")
     response7 = app.test_client().get("/api/v1/PAWn/h1")
+    response8 = app.test_client().get("/api/v1/rook")
 
     assert response.status_code == 200
     assert response.json["availableMoves"] == ["H2"]
@@ -40,6 +41,8 @@ def test_available_moves():
     assert response7.json["figure"] == "pawn"
     assert response7.json["currentField"] == "H1"
 
+    assert response8.status_code == 404
+
 
 def test_is_move_valid():
     # address /api/v1/<string:chessFigure>/<string:currentField>/<string:destField>
@@ -53,6 +56,7 @@ def test_is_move_valid():
     response7 = app.test_client().put("api/v1/Pawn/D2/D3")
     response8 = app.test_client().delete("api/v1/Pawn/D2/D3")
     response9 = app.test_client().get("api/v1/KiNg/d1/E2")
+    response10 = app.test_client().get("api/v1/Pawn")
 
     assert response.status_code == 200
     assert response.json["move"] == "valid"
@@ -94,3 +98,5 @@ def test_is_move_valid():
     assert response9.json["error"] == "null"
     assert response9.json["currentField"] == "D1"
     assert response9.json["destField"] == "E2"
+
+    assert response10.status_code == 404
