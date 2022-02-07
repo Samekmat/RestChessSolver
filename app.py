@@ -1,6 +1,5 @@
 from flask import Flask, jsonify
 from resources.chess import (
-    BOARD,
     Pawn,
     Knight,
     Bishop,
@@ -14,7 +13,7 @@ app = Flask(__name__)
 
 
 @app.route("/api/v1/<string:chessFigure>/<string:currentField>", methods=["GET"])
-def available_figure_moves(chessFigure, currentField):
+def available_figure_moves(chessFigure: str, currentField: str) -> object:
     currentField = currentField[0].upper() + currentField[1:]
     chessFigure = chessFigure.lower()
     figures = {
@@ -72,7 +71,7 @@ def available_figure_moves(chessFigure, currentField):
     "/api/v1/<string:chessFigure>/<string:currentField>/<string:destField>",
     methods=["GET"],
 )
-def is_move_valid(chessFigure, currentField, destField):
+def is_move_valid(chessFigure: str, currentField: str, destField: str) -> object:
     currentField = currentField[0].upper() + currentField[1:]
     chessFigure = chessFigure.lower()
     destField = destField[0].upper() + destField[1:]

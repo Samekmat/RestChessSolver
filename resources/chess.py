@@ -13,15 +13,15 @@ BOARD = [
 
 
 class Figure(ABC):
-    def __init__(self, position):
+    def __init__(self, position: str) -> None:
         self.currentField = position
         self.availableMoves = []
 
     @abstractmethod
-    def list_available_moves(self):
+    def list_available_moves(self) -> None:
         pass
 
-    def find_current_index(self):
+    def find_current_index(self) -> tuple:
         for sub_list in BOARD:
             if self.currentField in sub_list:
                 self.currentIndex = (
@@ -30,12 +30,12 @@ class Figure(ABC):
                 )
                 return self.currentIndex
 
-    def validate_move(self, dest_field):
+    def validate_move(self, dest_field: str) -> str:
         return "valid" if dest_field in self.availableMoves else "invalid"
 
 
 class Pawn(Figure):
-    def list_available_moves(self):
+    def list_available_moves(self) -> list:
         super().list_available_moves()
         super().find_current_index()
 
@@ -47,7 +47,7 @@ class Pawn(Figure):
 
 
 class Knight(Figure):
-    def list_available_moves(self):
+    def list_available_moves(self) -> list:
         super().list_available_moves()
         super().find_current_index()
 
@@ -60,7 +60,7 @@ class Knight(Figure):
 
 
 class Bishop(Figure):
-    def list_available_moves(self):
+    def list_available_moves(self) -> list:
         super().list_available_moves()
         super().find_current_index()
 
@@ -73,7 +73,7 @@ class Bishop(Figure):
 
 
 class Rook(Figure):
-    def list_available_moves(self):
+    def list_available_moves(self) -> list:
         super().list_available_moves()
         super().find_current_index()
 
@@ -87,7 +87,7 @@ class Rook(Figure):
 
 
 class Queen(Figure):
-    def list_available_moves(self):
+    def list_available_moves(self) -> list:
         super().list_available_moves()
         super().find_current_index()
 
@@ -104,7 +104,7 @@ class Queen(Figure):
 
 
 class King(Figure):
-    def list_available_moves(self):
+    def list_available_moves(self) -> list:
         super().list_available_moves()
         super().find_current_index()
 
