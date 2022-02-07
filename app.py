@@ -151,8 +151,12 @@ def is_move_valid(chessFigure, currentField, destField):
     }
 
     moves = figures[chessFigure].list_available_moves()
-    
-    return jsonify({'move': figures[chessFigure].validate_move(destField), 'figure': chessFigure, "error": e, "currentField": currentField, "destField": destField})
+    is_valid = figures[chessFigure].validate_move(destField)
+
+    if is_valid == 'invalid':
+        e = 'Current move is not permitted'
+        
+    return jsonify({'move': is_valid, 'figure': chessFigure, "error": e, "currentField": currentField, "destField": destField})
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
