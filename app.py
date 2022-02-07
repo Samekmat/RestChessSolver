@@ -98,7 +98,7 @@ def is_move_valid(chessFigure: str, currentField: str, destField: str) -> object
         status = 409
 
     if currentField == destField:
-        e = "U cannot move on the same place"
+        e = "You cannot move on the same place"
         status = 409
 
     return (
