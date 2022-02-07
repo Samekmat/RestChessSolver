@@ -1,19 +1,20 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from abc import ABC, abstractmethod
 
 app = Flask(__name__)
 
 
 BOARD = [
-            ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1'],
-            ['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2'],
-            ['A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'H3'],
-            ['A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'H4'],
-            ['A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5', 'H5'],
-            ['A6', 'B6', 'C6', 'D6', 'E6', 'F6', 'G6', 'H6'],
-            ['A7', 'B7', 'C7', 'D7', 'E7', 'F7', 'G7', 'H7'],
-            ['A8', 'B8', 'C8', 'D8', 'E8', 'F8', 'G8', 'H8'],
-        ]
+    ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"],
+    ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"],
+    ["A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3"],
+    ["A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4"],
+    ["A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5"],
+    ["A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6"],
+    ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"],
+    ["A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"],
+]
+
 
 class Figure(ABC):
     def __init__(self, position):
@@ -27,11 +28,14 @@ class Figure(ABC):
     def find_current_index(self):
         for sub_list in BOARD:
             if self.currentField in sub_list:
-                self.currentIndex = (BOARD.index(sub_list), sub_list.index(self.currentField))
+                self.currentIndex = (
+                    BOARD.index(sub_list),
+                    sub_list.index(self.currentField),
+                )
                 return self.currentIndex
 
     def validate_move(self, dest_field):
-        return 'valid' if dest_field in self.availableMoves else 'invalid'
+        return "valid" if dest_field in self.availableMoves else "invalid"
 
 
 class Pawn(Figure):
@@ -39,7 +43,9 @@ class Pawn(Figure):
         super().list_available_moves()
         super().find_current_index()
 
-        self.availableMoves.append(BOARD[self.currentIndex[0] + 1][self.currentIndex[1]])
+        self.availableMoves.append(
+            BOARD[self.currentIndex[0] + 1][self.currentIndex[1]]
+        )
 
         return self.availableMoves
 
@@ -53,7 +59,7 @@ class Knight(Figure):
             for y in range(8):
                 if abs((self.currentIndex[0] - x) * (self.currentIndex[1] - y)) == 2:
                     self.availableMoves.append(BOARD[x][y])
-        
+
         return sorted(self.availableMoves)
 
 
@@ -108,7 +114,10 @@ class King(Figure):
 
         for x in range(8):
             for y in range(8):
-                if(max(abs(x - self.currentIndex[0]), abs(y - self.currentIndex[1])) == 1):
+                if (
+                    max(abs(x - self.currentIndex[0]), abs(y - self.currentIndex[1]))
+                    == 1
+                ):
                     self.availableMoves.append(BOARD[x][y])
         return sorted(self.availableMoves)
 
@@ -121,59 +130,103 @@ def available_figure_moves(chessFigure, currentField):
     currentField = currentField[0].upper() + currentField[1:]
     chessFigure = chessFigure.lower()
     figures = {
-        'pawn': Pawn(currentField),
-        'knight': Knight(currentField),
-        'bishop': Bishop(currentField),
-        'rook': Rook(currentField),
-        'queen': Queen(currentField),
-        'king': King(currentField),
+        "pawn": Pawn(currentField),
+        "knight": Knight(currentField),
+        "bishop": Bishop(currentField),
+        "rook": Rook(currentField),
+        "queen": Queen(currentField),
+        "king": King(currentField),
     }
-    e = 'null'
+    e = "null"
 
     if currentField not in flatBoard:
-        e = 'Field does not exist'
-        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure, "currentField": currentField}), 409
+        e = "Field does not exist"
+        return (
+            jsonify(
+                {
+                    "availableMoves": [],
+                    "error": e,
+                    "figure": chessFigure,
+                    "currentField": currentField,
+                }
+            ),
+            409,
+        )
 
     if chessFigure not in figures:
-        e = 'Wrong figure'
-        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure, "currentField": currentField}), 404
+        e = "Wrong figure"
+        return (
+            jsonify(
+                {
+                    "availableMoves": [],
+                    "error": e,
+                    "figure": chessFigure,
+                    "currentField": currentField,
+                }
+            ),
+            404,
+        )
 
-    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": e, "figure": chessFigure, "currentField": currentField}), 200
- 
+    return (
+        jsonify(
+            {
+                "availableMoves": figures[chessFigure].list_available_moves(),
+                "error": e,
+                "figure": chessFigure,
+                "currentField": currentField,
+            }
+        ),
+        200,
+    )
 
 
-@app.route("/api/v1/<string:chessFigure>/<string:currentField>/<string:destField>", methods=["GET"])
+@app.route(
+    "/api/v1/<string:chessFigure>/<string:currentField>/<string:destField>",
+    methods=["GET"],
+)
 def is_move_valid(chessFigure, currentField, destField):
     currentField = currentField[0].upper() + currentField[1:]
     chessFigure = chessFigure.lower()
     destField = destField[0].upper() + destField[1:]
-    e = 'null'
+    e = "null"
     figures = {
-        'pawn': Pawn(currentField),
-        'knight': Knight(currentField),
-        'bishop': Bishop(currentField),
-        'rook': Rook(currentField),
-        'queen': Queen(currentField),
-        'king': King(currentField),
+        "pawn": Pawn(currentField),
+        "knight": Knight(currentField),
+        "bishop": Bishop(currentField),
+        "rook": Rook(currentField),
+        "queen": Queen(currentField),
+        "king": King(currentField),
     }
 
-    moves = figures[chessFigure].list_available_moves()
+    figures[chessFigure].list_available_moves()
     isValid = figures[chessFigure].validate_move(destField)
     status = 200
 
-    if isValid == 'invalid':
-        e = 'Current move is not permitted'
+    if isValid == "invalid":
+        e = "Current move is not permitted"
         status = 409
 
     if destField not in flatBoard:
-        e = 'Field does not exist'
+        e = "Field does not exist"
         status = 409
 
     if currentField == destField:
-        e = 'U cannot move on the same place'
+        e = "U cannot move on the same place"
         status = 409
 
-    return jsonify({'move': isValid, 'figure': chessFigure, "error": e, "currentField": currentField, "destField": destField}), status
+    return (
+        jsonify(
+            {
+                "move": isValid,
+                "figure": chessFigure,
+                "error": e,
+                "currentField": currentField,
+                "destField": destField,
+            }
+        ),
+        status,
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
