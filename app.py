@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from abc import ABC, abstractmethod
 
 app = Flask(__name__)
@@ -124,9 +124,13 @@ def available_figure_moves(chessFigure, currentField):
         'queen': Queen(currentField),
         'king': King(currentField),
     }
-
-  
-    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": 'null', "figure": chessFigure.lower(), "currentField": currentField})
+    e = 'null'
+    flatBoard = [item for sublist in BOARD for item in sublist]
+    if currentField not in flatBoard:
+        e = 'Field does not exist'
+        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure.lower(), "currentField": currentField})
+    
+    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": e, "figure": chessFigure.lower(), "currentField": currentField})
  
 
 if __name__ == "__main__":
