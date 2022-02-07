@@ -113,6 +113,9 @@ class King(Figure):
         return sorted(self.availableMoves)
 
 
+flatBoard = [item for sublist in BOARD for item in sublist]
+
+
 @app.route("/api/v1/<string:chessFigure>/<string:currentField>", methods=["GET"])
 def available_figure_moves(chessFigure, currentField):
     currentField = currentField[0].upper() + currentField[1:]
@@ -126,12 +129,16 @@ def available_figure_moves(chessFigure, currentField):
         'king': King(currentField),
     }
     e = 'null'
-    flatBoard = [item for sublist in BOARD for item in sublist]
+
     if currentField not in flatBoard:
         e = 'Field does not exist'
-        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure, "currentField": currentField})
+        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure, "currentField": currentField}), 409
 
-    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": e, "figure": chessFigure, "currentField": currentField})
+    if chessFigure not in figures:
+        e = 'Wrong figure'
+        return jsonify({"availableMoves": [], "error": e, "figure": chessFigure, "currentField": currentField}), 404
+
+    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": e, "figure": chessFigure, "currentField": currentField}), 200
  
 
 
@@ -151,12 +158,22 @@ def is_move_valid(chessFigure, currentField, destField):
     }
 
     moves = figures[chessFigure].list_available_moves()
-    is_valid = figures[chessFigure].validate_move(destField)
+    isValid = figures[chessFigure].validate_move(destField)
+    status = 200
 
-    if is_valid == 'invalid':
+    if isValid == 'invalid':
         e = 'Current move is not permitted'
-        
-    return jsonify({'move': is_valid, 'figure': chessFigure, "error": e, "currentField": currentField, "destField": destField})
+        status = 409
+
+    if destField not in flatBoard:
+        e = 'Field does not exist'
+        status = 409
+
+    if currentField == destField:
+        e = 'U cannot move on the same place'
+        status = 409
+
+    return jsonify({'move': isValid, 'figure': chessFigure, "error": e, "currentField": currentField, "destField": destField}), status
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
