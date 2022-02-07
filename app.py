@@ -112,5 +112,22 @@ class King(Figure):
         return sorted(self.availableMoves)
 
 
+@app.route("/api/v1/<string:chessFigure>/<string:currentField>", methods=["GET"])
+def available_figure_moves(chessFigure, currentField):
+    currentField = currentField[0].upper() + currentField[1:]
+    chessFigure = chessFigure.lower()
+    figures = {
+        'pawn': Pawn(currentField),
+        'knight': Knight(currentField),
+        'bishop': Bishop(currentField),
+        'rook': Rook(currentField),
+        'queen': Queen(currentField),
+        'king': King(currentField),
+    }
+
+  
+    return jsonify({"availableMoves": figures[chessFigure].list_available_moves(), "error": 'null', "figure": chessFigure.lower(), "currentField": currentField})
+ 
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
