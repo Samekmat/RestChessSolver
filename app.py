@@ -21,7 +21,16 @@ def index():
                 "available_paths": [
                     '/api/v1/<string:chessFigure>/<string:currentField>',
                     '/api/v1/<string:chessFigure>/<string:currentField>/<string:destField>'
-                    ]
+                    ],
+                "available_figures": [
+                    'pawn',
+                    'knight',
+                    'bishop',
+                    'rook',
+                    'queen',
+                    'king',
+                ],
+                "fields_range": 'a1 - h8'
             }))
 
 
