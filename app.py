@@ -15,7 +15,14 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "<p>Available paths:</br> /api/v1/<string:chessFigure>/<string:currentField></br> /api/v1/<string:chessFigure>/<string:currentField>/<string:destField></p>"
+    return (
+        jsonify(
+            {
+                "available_paths": [
+                    '/api/v1/<string:chessFigure>/<string:currentField>',
+                    '/api/v1/<string:chessFigure>/<string:currentField>/<string:destField>'
+                    ]
+            }))
 
 
 @app.route("/api/v1/<string:chessFigure>/<string:currentField>", methods=["GET"])
