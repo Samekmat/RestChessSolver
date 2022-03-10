@@ -1,4 +1,7 @@
 ﻿# RestChessSolver
+ 
+ https://rest-chess-solver.herokuapp.com/
+ 
 🇵🇱
 RestChessSolver to REST API wyświetlające wszystkie możliwe ruchy figury szachowej bazując na polu, na którym stoi, a także sprawdzające czy podany przez nas ruch z punktu A do punktu B jest możliwy. Bazowe założenie jest takie, iż podana figura jest aktualnie jedyną na całej szachownicy.
 ---
