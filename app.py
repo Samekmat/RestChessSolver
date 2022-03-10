@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, jsonify
 from resources.chess import (
     Pawn,
@@ -10,6 +11,11 @@ from resources.chess import (
 )
 
 app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return "<p>Available paths:</br> /api/v1/<string:chessFigure>/<string:currentField></br> /api/v1/<string:chessFigure>/<string:currentField>/<string:destField></p>"
 
 
 @app.route("/api/v1/<string:chessFigure>/<string:currentField>", methods=["GET"])
